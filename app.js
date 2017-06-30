@@ -10,11 +10,8 @@ const bodyParser = require('body-parser');
 
 
 
-const app = express();
 
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+const app = express();
 
 
 
@@ -39,6 +36,7 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.info(`[YaTa] Application Listening on Port ${PORT}`);
 });
+
 
 
 module.exports = app;

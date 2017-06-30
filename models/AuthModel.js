@@ -22,13 +22,15 @@ exports.auth = (token, done) => {
         default: return done(err.message);
       }
     } else {
-      const sql = "SELECT user_idx FROM user WHERE user_email = ?";
+      const sql = "SELECT user_idx FROM user WHERE user_id = ?";
 
       pool.query(sql, [decoded.id], (err, rows) => {
         if (err) {
+          console.log(err);
           return done(err);
         } else {
           if (rows.length == 0) {
+            console.log(401401401);
             return done(401);
           } else {  // 인증 성공
             return done(null, rows[0].user_idx);

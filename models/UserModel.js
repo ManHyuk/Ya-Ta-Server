@@ -7,6 +7,8 @@ const pool = mysql.createPool(DBConfig);
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
+const error_message = require('../errors.json');
+
 /*******************
  *  Register
  *  @param: user_data = {user_name, user_password, user_email}
@@ -14,9 +16,9 @@ const config = require('../config/config');
 
 exports.register = (user_data) => {
   return new Promise((resolve, reject) => {
-      const sql = "SELECT user_email FROM user WHERE user_email = ?";
+      const sql = "SELECT user_id FROM user WHERE user_id = ?";
 
-      pool.query(sql, [user_data.user_email], (err, rows) => {  // 아이디 중복 체크
+      pool.query(sql, [user_data.user_id], (err, rows) => {  // 아이디 중복 체크
         if (err) {
           reject(err);
         } else {
@@ -49,7 +51,7 @@ exports.register = (user_data) => {
   ).then((result) => {
     return new Promise((resolve, reject) => {
       const sql =
-        "SELECT user_idx, user_name, user_email, user_created_at " +
+        "SELECT user_idx, user_name, user_id, user_created_at " +
         "FROM user " +
         "WHERE user_idx = ?";
 
@@ -70,13 +72,13 @@ exports.register = (user_data) => {
  ********************/
 exports.login = (user_data) => {
   return new Promise((resolve, reject) => {
-      const sql = "SELECT user_email FROM user WHERE user_email = ?";
+      const sql = "SELECT user_id FROM user WHERE user_id = ?";
 
-      pool.query(sql, [user_data.user_email], (err, rows) => {  // 아이디 존재 검사
+      pool.query(sql, [user_data.user_id], (err, rows) => {  // 아이디 존재 검사
         if (err) {
           reject(err);
         } else {
-          if (rows.length == 0) {  // 아이디 없음
+          if (rows.length == 0) {  // email 없음
             reject(1202);
           } else {
             resolve(null);
@@ -87,19 +89,22 @@ exports.login = (user_data) => {
   ).then(() => {
     return new Promise((resolve, reject) => {
       const sql =
-        "SELECT user_email, user_name " +
+        "SELECT user_id, user_name " +
         "FROM user " +
-        "WHERE user_email = ? and user_password = ?";
+        "WHERE user_id = ? and user_password = ?";
 
-      pool.query(sql, [user_data.user_email, user_data.user_password], (err, rows) => {
+      pool.query(sql, [user_data.user_id, user_data.user_password], (err, rows) => {
         if (err) {
           reject(err);
         } else {
           if (rows.length == 0) {  // 비밀번호 틀림
+
+
+
             reject(1203);
           } else {
             const profile = {
-              email: rows[0].user_email,
+              id: rows[0].user_id,
               username: rows[0].user_name
             };
             const token = jwt.sign(profile, config.jwt.cert, {'expiresIn': "10h"});
@@ -115,4 +120,22 @@ exports.login = (user_data) => {
       });
     });
   });
+};
+
+exports.edit = (user_data) => {
+  return new Promise((resolve, reject) => {
+    const sql = "";
+
+    pool.query(sql,[], (err, rows) => {
+      if (err) {
+        reject(err)
+      } else {
+
+
+      }
+
+    })
+
+  })
+
 };

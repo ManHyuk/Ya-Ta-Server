@@ -4,16 +4,17 @@ const matchModel = require('../models/MatchModel');
 const error_message = require('../errors.json');
 
 exports.list = async(req, res, next) => {
-
-  let result ='';
+  let result = '';
   try {
+    const match_data = {
+      matching_idx: req.params.matching_idx,
+    };
 
-
-  }catch (error){
-
-
+    result = await matchModel.list(match_data);
+  } catch (error) {
+    return next(error);
   }
-
+  return res.json(result);
 };
 
 
@@ -26,6 +27,7 @@ exports.register = async(req, res, next) => {
 
   let result = '';
   try {
+    // FIXME : 바디 숫자 줄이기
     const owner_data = {
       owner_idx: req.user_idx,
       owner_slng: req.body.slng,
@@ -59,3 +61,27 @@ exports.register = async(req, res, next) => {
 
 
 };
+
+exports.completed = async(req, res, next) => {
+
+};
+
+
+
+
+
+// 차주 => 운전자 정보 상세보기
+exports.detail = async(req, res, next) =>{
+  let result = '';
+  try {
+    const detail_data={
+      applying_idx: req.params.applying_idx,
+    };
+
+    result = await matchModel.detail(detail_data);
+  }catch(error){
+    return next(error);
+  }
+  return res.json(result);
+}
+

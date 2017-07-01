@@ -10,6 +10,22 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 
 
+exports.inform = async (req, res, next)=>{
+  let result = '';
+  try {
+    const profile_data = {
+      user_idx: req.user_idx,
+    };
+    result = await profileModel.inform(profile_data);
+  }catch(error){
+    return next(error);
+
+  }
+  return res.json(result);
+};
+
+
+
 exports.updating = async(req, res, next) => {
   let result ='';
 

@@ -12,8 +12,8 @@ exports.search = async(req, res, next) => {
     const search_data = {
       sloc: req.params.sloc,
       eloc: req.params.eloc,
-
     };
+
 
     result = await applyModel.search(search_data);
 
@@ -27,12 +27,14 @@ exports.search = async(req, res, next) => {
     }
   }
 
+
   return res.json(result)
 
 };
 
-// 운전자 -> 차주 메챙 신청
-// ('/driver/:matching_idx/apply')
+// 운전자 -> 차주 메칭 신청
+// ('/driver/apply/:matching_idx')
+// FIXME 운전자가 같은 차주에게 두번 신청할 경우 막기
 exports.apply = async(req, res, next) => {
   let result = '';
 
@@ -53,7 +55,24 @@ exports.apply = async(req, res, next) => {
       return res.status(400).json(error);
     }
   }
-  return res.json(res[1200])
-
+  return res.json(res_msg[1200])
 
 };
+
+
+// 운전자 => 차주 상세보기
+// FIXME 별점 수정
+
+exports.detail = async(req, res, next) =>{
+  let result = '';
+  try {
+    const detail_data = {
+      matching_idx: req.params.matching_idx,
+    };
+
+    result = await applyModel.detail(detail_data);
+  }catch(error){
+    return next(error);
+  }
+  return res.json(result);
+}

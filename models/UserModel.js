@@ -16,7 +16,7 @@ const error_message = require('../errors.json');
 
 exports.register = (user_data) => {
   return new Promise((resolve, reject) => {
-      const sql = "SELECT user_id FROM user WHERE user_id = ?";
+      const sql = `SELECT user_id FROM user WHERE user_id = ?`;
 
       pool.query(sql, [user_data.user_id], (err, rows) => {  // 아이디 중복 체크
         if (err) {
@@ -24,7 +24,7 @@ exports.register = (user_data) => {
         } else {
           if (rows.length != 0) {  // 이미 아이디 존재
             reject(1201);
-          }else{
+          } else {
             resolve(null);
           }
         }
@@ -32,7 +32,7 @@ exports.register = (user_data) => {
     }
   ).then(() => {
       return new Promise((resolve, reject) => {
-        const sql = "INSERT INTO user SET ?";
+        const sql = `INSERT INTO user SET ?`;
 
         pool.query(sql, user_data, (err, rows) => {  // 가입 시도
           if (err) {
@@ -51,9 +51,11 @@ exports.register = (user_data) => {
   ).then((result) => {
     return new Promise((resolve, reject) => {
       const sql =
-        "SELECT user_idx, user_name, user_id, user_created_at " +
-        "FROM user " +
-        "WHERE user_idx = ?";
+        `
+        SELECT user_idx, user_name, user_id, user_created_at
+        FROM user 
+        WHERE user_idx = ?
+        `;
 
       pool.query(sql, result.insertId, (err, rows) => {
         if (err) {
@@ -72,13 +74,13 @@ exports.register = (user_data) => {
  ********************/
 exports.login = (user_data) => {
   return new Promise((resolve, reject) => {
-      const sql = "SELECT user_id FROM user WHERE user_id = ?";
+      const sql = `SELECT user_id FROM user WHERE user_id = ?`;
 
       pool.query(sql, [user_data.user_id], (err, rows) => {  // 아이디 존재 검사
         if (err) {
           reject(err);
         } else {
-          if (rows.length == 0) {  // email 없음
+          if (rows.length == 0) {  // id 없음
             reject(1202);
           } else {
             resolve(null);
@@ -89,25 +91,24 @@ exports.login = (user_data) => {
   ).then(() => {
     return new Promise((resolve, reject) => {
       const sql =
-        "SELECT user_id, user_name " +
-        "FROM user " +
-        "WHERE user_id = ? and user_password = ?";
+        `
+        SELECT user_id, user_name
+        FROM user
+        WHERE user_id = ? and user_password = ?
+        `;
 
       pool.query(sql, [user_data.user_id, user_data.user_password], (err, rows) => {
         if (err) {
           reject(err);
         } else {
           if (rows.length == 0) {  // 비밀번호 틀림
-
-
-
             reject(1203);
           } else {
             const profile = {
               id: rows[0].user_id,
               username: rows[0].user_name
             };
-            const token = jwt.sign(profile, config.jwt.cert, {'expiresIn': "10h"});
+            const token = jwt.sign(profile, config.jwt.cert, {'expiresIn': "100h"});
 
             const result = {
               profile,
@@ -120,22 +121,4 @@ exports.login = (user_data) => {
       });
     });
   });
-};
-
-exports.edit = (user_data) => {
-  return new Promise((resolve, reject) => {
-    const sql = "";
-
-    pool.query(sql,[], (err, rows) => {
-      if (err) {
-        reject(err)
-      } else {
-
-
-      }
-
-    })
-
-  })
-
 };

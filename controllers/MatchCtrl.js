@@ -1,7 +1,7 @@
 'use strict';
 
 const matchModel = require('../models/MatchModel');
-const error_message = require('../errors.json');
+const res_msg = require('../errors.json');
 
 exports.list = async(req, res, next) => {
   let result = '';
@@ -19,10 +19,6 @@ exports.list = async(req, res, next) => {
 
 
 exports.register = async(req, res, next) => {
-  if (!req.body.slat || !req.body.slng || !req.body.sloc ||!req.body.elat || !req.body.elng || !req.body.eloc ||
-   !req.body.companion || !req.body.time || !req.body.message) {
-    return res.json(error_message[9401])
-  }
 
 
   let result = '';
@@ -48,22 +44,58 @@ exports.register = async(req, res, next) => {
   } catch (error) {
     if (isNaN(error)) {
       console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
+  }
+  return res.json(res_msg[1200]);
+
+
+};
+
+// 차주 / 매칭 승낙
+exports.matching = async(req, res, next) => {
+  let result ='';
+  try {
+    const matching_data = {
+      a_idx: req.params.applying_idx,
+    };
+    result = await matchModel.matching(matching_data)
+  }catch(error) {
+    if (isNaN(error)) {
+      console.log(error);
       return res.status(500).json(error);
     } else {
       console.log(error);
       return res.status(400).json(error);
     }
   }
-  return res.json({
-    "status": true,
-    "message": "success"
-  })
-
-
+  return res.json(res_msg[1200]);
 };
 
-exports.completed = async(req, res, next) => {
 
+// 차주 / 매칭 종료, 매칭 완료 ( 서비스 끝 )
+exports.finished = async(req, res, next) => {
+  let result = '';
+  try {
+    const finished_data = {
+      a_idx: req.params.applying_idx
+    };
+
+    result = await matchModel.finished(finished_data);
+  }catch (error) {
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(error);
+    } else {
+      console.log(error);
+      return res.status(400).json(error);
+    }
+  }
+
+  return res.json(res_msg[1200])
 };
 
 
@@ -80,8 +112,14 @@ exports.detail = async(req, res, next) =>{
 
     result = await matchModel.detail(detail_data);
   }catch(error){
-    return next(error);
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
   }
-  return res.json(result);
+  return res.status(200).json(result);
 }
 

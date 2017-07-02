@@ -58,11 +58,43 @@ exports.register = (owner_data) => {
   });
 };
 
-exports.completed = () => {
+
+exports.matching = (matching_data) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "";
+      `
+      UPDATE applying as a
+      LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
+      SET a.applying_type = 1 , m.matching_type = 1
+      WHERE a.applying_idx = ?
+      `;
+    pool.query(sql, [matching_data.a_idx], (err,rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
 
+  });
+};
+
+exports.finished = (finished_data) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      `
+      UPDATE applying as a
+      LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
+      SET a.applying_type = 2 , m.matching_type = 2
+      WHERE a.applying_idx = ?
+      `;
+    pool.query(sql, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
   });
 };
 
@@ -73,10 +105,12 @@ exports.detail = (detail_data) => {
   return new Promise((resolve, reject) => {
 
     const sql =
-      "SELECT AVG (rating_star) as rating_star, applying_message, user_name, user_age, user_career, applying_companion "+
-      "FROM applying AS a "+
-      "LEFT JOIN user AS u ON a.user_idx = u.user_idx "+
-      "LEFT JOIN rating AS r ON r.receive_user_idx = a.user_idx WHERE applying_idx = ? ";
+      `
+      SELECT AVG (rating_star) as rating_star, applying_message, user_name, user_age, user_career, applying_companion
+      FROM applying AS a
+      LEFT JOIN user AS u ON a.user_idx = u.user_idx
+      LEFT JOIN rating AS r ON r.receive_user_idx = a.user_idx WHERE applying_idx = ? 
+      `;
 
     pool.query(sql, [detail_data.applying_idx], (err, rows) => {
       if (err) {

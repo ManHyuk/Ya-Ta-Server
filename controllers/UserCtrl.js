@@ -2,7 +2,7 @@
 
 const userModel = require('../models/UserModel');
 const config = require('../config/config');
-const error_message = require('../errors.json');
+const res_msg = require('../errors.json');
 
 
 
@@ -11,7 +11,7 @@ const error_message = require('../errors.json');
  ********************/
 exports.register = async(req, res, next) => {
   if (req.body.pw1 != req.body.pw2) {
-    return res.json(error_message[1204]);
+    return res.json(res_msg[1204]);
   }
 
   let result = '';
@@ -29,20 +29,16 @@ exports.register = async(req, res, next) => {
   } catch (error) {
     if (isNaN(error)) {
       console.log(error);
-      return res.status(500).json(error);
+      return res.status(500).json(res_msg[9500]);
     } else {
       console.log(error);
-      return res.status(400).json(error);
+      return res.status(400).json(res_msg[8400]);
     }
   }
 
   // success
-  return res.status(200).json({
-    "status": true,
-    "message": "success",
-    "result": result
-
-  });
+  return res.status(200).json(res_msg[1200]
+  );
 };
 
 
@@ -64,10 +60,10 @@ exports.login = async(req, res, next) => {
   } catch (error) {
     if (isNaN(error)) {
 
-      return res.status(500).json(error);
+      return res.status(500).json(res_msg[9500]);
       // return next(error)
     } else {
-      return res.status(400).json(error_message[error]);
+      return res.status(400).json(res_msg[error]);
     }
   }
 
@@ -79,29 +75,3 @@ exports.login = async(req, res, next) => {
   });
 };
 
-exports.edit = async(req, res, next) => {
-  let result = '';
-
-  try {
-    const user_data = {
-
-
-
-    };
-
-    result = await userModel.edit(user_data);
-  } catch (error) {
-    if (isNaN(error)) {
-
-      return res.status(500).json(error)
-    } else {
-
-      return res.status(400).json(error_message[error])
-    }
-
-  }
-
-  // success
-  return res.json(result);
-
-};

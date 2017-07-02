@@ -6,7 +6,6 @@ const pool = mysql.createPool(DBConfig);
 
 exports.search = (search_data) => {
   return new Promise((resolve, reject) => {
-
     const sql =
       "SELECT u.user_name, u.user_img, m.matching_sloc, m.matching_eloc, m.matching_message, m.matching_companion,m.matching_created_at " +
     "FROM matching as m " +
@@ -51,7 +50,7 @@ exports.detail = (detail_data) => {
       "SELECT AVG (rating_star) AS rating_star, matching_sloc, matching_eloc, user_name, user_age, matching_companion, matching_message, user_car "+
       "FROM matching AS m " +
       "LEFT JOIN user AS u ON m.user_idx = u.user_idx "+
-      "LEFT JOIN rating AS r ON r.receive_user_idx = m.user_idx WHERE matching_idx = ? "
+      "LEFT JOIN rating AS r ON r.receive_user_idx = m.user_idx WHERE matching_idx = ? ";
 
     pool.query(sql, [detail_data.matching_idx], (err, rows) => {
       if (err) {

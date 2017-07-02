@@ -27,8 +27,7 @@ exports.search = async(req, res, next) => {
     }
   }
 
-
-  return res.json(result)
+  return res.status(200).json(result)
 
 };
 
@@ -49,10 +48,10 @@ exports.apply = async(req, res, next) => {
   }catch (error) {
     if (isNaN(error)) {
       console.log(error);
-      return res.status(500).json(error);
+      return res.status(500).json(res_msg[9500]);
     } else {
       console.log(error);
-      return res.status(400).json(error);
+      return res.status(400).json(res_msg[8400]);
     }
   }
   return res.json(res_msg[1200])
@@ -72,7 +71,13 @@ exports.detail = async(req, res, next) =>{
 
     result = await applyModel.detail(detail_data);
   }catch(error){
-    return next(error);
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
   }
-  return res.json(result);
+  return res.status(200).json(result);
 }

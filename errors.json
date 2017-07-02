@@ -81,9 +81,17 @@
   },
 
 
-  "1200":{
+  "1200": {
     "status": true,
     "message": "success"
+  },
+  "8400": {
+    "status": false,
+    "message": "400 Error"
+  },
+  "9500": {
+    "status": false,
+    "message": "500 Error"
   }
 
 

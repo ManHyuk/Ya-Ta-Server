@@ -18,12 +18,12 @@ exports.write = async(req, res , next) => {
   }catch (error){
     if (isNaN(error)) {
       console.log(error);
-      return res.status(500).json(error);
+      return res.status(500).json(res_msg[9500]);
     } else {
       console.log(error);
-      return res.status(400).json(error);
+      return res.status(400).json(res_msg[8400]);
     }
   }
 
-  return res.json(res_msg[1200])
+  return res.status(200).json(res_msg[1200])
 };

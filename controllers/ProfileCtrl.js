@@ -18,10 +18,16 @@ exports.inform = async (req, res, next)=>{
     };
     result = await profileModel.inform(profile_data);
   }catch(error){
-    return next(error);
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
 
   }
-  return res.json(result);
+  return res.status(200).json(result);
 };
 
 
@@ -40,10 +46,16 @@ exports.updating = async(req, res, next) => {
     console.log(profile_data);
     result = await profileModel.updating(profile_data);
   }catch (error){
-    return next(error);
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
   }
   // return res.json(req.files);
-  return res.json(result);
+  return res.status(200).json(result);
 };
 
 

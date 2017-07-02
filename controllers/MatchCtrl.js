@@ -76,7 +76,7 @@ exports.matching = async(req, res, next) => {
 };
 
 
-// 차주 / 매칭 종료, 매칭 완료 ( 서비스 끝 )
+// 차주 / 탑승 종료, 매칭 완료 ( 서비스 끝 )
 exports.finished = async(req, res, next) => {
   let result = '';
   try {

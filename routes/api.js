@@ -16,14 +16,14 @@ module.exports = (router) => {
   router.route('/user/login')
     .post(userCtrl.login); // 로그인
 
-  // PROFILE (MyPage)
+  // PROFILE ( MyPage )
   router.route('/profile')
     .get(authCtrl.auth, profileCtrl.inform)
     .put(authCtrl.auth, profileCtrl.uploadImage, profileCtrl.updating); // 수정
 
 
 
-  // OWNER ( Match)
+  // OWNER ( Match )
   router.route('/owner/match/register')
     .post(authCtrl.auth, matchCtrl.register); // 차주 / 매칭 신청
   router.route('/owner/match/list/:matching_idx')
@@ -31,7 +31,7 @@ module.exports = (router) => {
   router.route('/owner/match/detail/:applying_idx')
     .get(authCtrl.auth, matchCtrl.detail); // 차주 / 운전자 상세보기
 
-  // DRIVER ( Apply)
+  // DRIVER ( Apply )
   router.route('/driver/apply/:matching_idx')
     .post(authCtrl.auth, applyCtrl.apply); // 운전자 / 매칭 신청
   router.route('/driver/search/:sloc/:eloc')

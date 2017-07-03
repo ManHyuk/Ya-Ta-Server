@@ -32,7 +32,7 @@ exports.register = (user_data) => {
     }
   ).then(() => {
       return new Promise((resolve, reject) => {
-        const sql = `INSERT INTO user SET ?`;
+        const sql = "INSERT INTO user SET ? ";
 
         pool.query(sql, user_data, (err, rows) => {  // 가입 시도
           if (err) {

@@ -1,6 +1,7 @@
 'use strict';
 
 
+
 const authCtrl = require('../controllers/AuthCtrl');
 const userCtrl = require('../controllers/UserCtrl');
 const matchCtrl = require('../controllers/MatchCtrl');
@@ -34,10 +35,10 @@ module.exports = (router) => {
   // DRIVER ( Apply )
   router.route('/driver/apply/:matching_idx')
     .post(authCtrl.auth, applyCtrl.apply); // 운전자 / 매칭 신청
-  router.route('/driver/search/:sloc/:eloc')
+  router.route('/driver/apply/search/:sloc/:eloc')
     .get(authCtrl.auth, applyCtrl.search); // 운전자 / 차주 검색
 
-  router.route('/driver/detail/:matching_idx') // TODO 로직 확인
+  router.route('/driver/apply/detail/:matching_idx') // TODO 로직 확인
     .get(authCtrl.auth, applyCtrl.detail); // 운전자 / 차주 상세보기
 
   // RATING

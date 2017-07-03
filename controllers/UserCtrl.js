@@ -37,8 +37,7 @@ exports.register = async(req, res, next) => {
   }
 
   // success
-  return res.status(200).json(res_msg[1200]
-  );
+  return res.status(200).json(res_msg[1200]);
 };
 
 
@@ -47,7 +46,7 @@ exports.register = async(req, res, next) => {
  ********************/
 exports.login = async(req, res, next) => {
   if (!req.body.id || !req.body.pw){
-    return error_message[9401]
+    return res_msg[9401]
   }
   let result = '';
 

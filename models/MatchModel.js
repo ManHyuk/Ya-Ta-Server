@@ -24,8 +24,6 @@ exports.list = (match_data) =>{
   });
 };
 
-
-
 exports.register = (owner_data) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO matching(user_idx, matching_slat, matching_slng, matching_sloc, matching_saddr, matching_elat, matching_elng, matching_eloc, matching_eaddr, matching_companion, matching_time, matching_message) " +
@@ -55,6 +53,16 @@ exports.register = (owner_data) => {
         }
       }
     });
+  });
+};
+
+exports.confirmed = (confirm_data) => {
+  return new Promise((resolve, rejcet) => {
+    const sql =
+      `
+      
+      `;
+
   });
 };
 

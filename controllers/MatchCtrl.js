@@ -14,12 +14,11 @@ exports.list = async(req, res, next) => {
   } catch (error) {
     return next(error);
   }
-  return res.json(result);
+  return res.status(200).json({result});
 };
 
 
 exports.register = async(req, res, next) => {
-
 
   let result = '';
   try {
@@ -50,10 +49,27 @@ exports.register = async(req, res, next) => {
       return res.status(400).json(res_msg[8400]);
     }
   }
-  return res.json(res_msg[1200]);
+  return res.status(200).json(res_msg[1200]);
 
 
 };
+// 차주 / 매칭 확인
+exports.confirmed = async(req, res, next) => {
+  let result = '';
+  try {
+    const confirm_data = {
+      a_idx: req.params.applying_idx
+
+    };
+
+
+  }catch (error) {
+
+
+  }
+
+};
+
 
 // 차주 / 매칭 승낙
 exports.matching = async(req, res, next) => {
@@ -76,7 +92,8 @@ exports.matching = async(req, res, next) => {
 };
 
 
-// 차주 / 탑승 종료, 매칭 완료 ( 서비스 끝 )
+// 차주 / 탑승 종료
+// 운전자 / 탑승 종료
 exports.finished = async(req, res, next) => {
   let result = '';
   try {
@@ -120,6 +137,6 @@ exports.detail = async(req, res, next) =>{
       return res.status(400).json(res_msg[8400]);
     }
   }
-  return res.status(200).json(result);
-}
+  return res.status(200).json({result});
+};
 

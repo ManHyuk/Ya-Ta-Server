@@ -27,7 +27,7 @@ exports.inform = async (req, res, next)=>{
     }
 
   }
-  return res.status(200).json(result);
+  return res.status(200).json({result});
 };
 
 
@@ -55,7 +55,7 @@ exports.updating = async(req, res, next) => {
     }
   }
   // return res.json(req.files);
-  return res.status(200).json(result);
+  return res.status(200).json({result});
 };
 
 

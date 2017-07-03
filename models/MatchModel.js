@@ -56,13 +56,22 @@ exports.register = (owner_data) => {
   });
 };
 
-exports.confirmed = (confirm_data) => {
+exports.approved = (approved_data) => {
   return new Promise((resolve, rejcet) => {
     const sql =
       `
-      
+      UPDATE applying as a
+      LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
+      SET a.applying_type = 1 , m.matching_type = 1
+      WHERE a.applying_idx = ?
       `;
-
+    pool.query(sql, [matching_data.a_idx], (err,rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
   });
 };
 
@@ -73,7 +82,7 @@ exports.matching = (matching_data) => {
       `
       UPDATE applying as a
       LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
-      SET a.applying_type = 1 , m.matching_type = 1
+      SET a.applying_type = 2 , m.matching_type = 2
       WHERE a.applying_idx = ?
       `;
     pool.query(sql, [matching_data.a_idx], (err,rows) => {
@@ -93,7 +102,7 @@ exports.finished = (finished_data) => {
       `
       UPDATE applying as a
       LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
-      SET a.applying_type = 2 , m.matching_type = 2
+      SET a.applying_type = 3 , m.matching_type = 3
       WHERE a.applying_idx = ?
       `;
     pool.query(sql, [], (err, rows) => {

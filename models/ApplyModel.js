@@ -7,7 +7,7 @@ const pool = mysql.createPool(DBConfig);
 exports.search = (search_data) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "SELECT u.user_name, u.user_img, m.matching_sloc, m.matching_eloc, m.matching_message, m.matching_companion,m.matching_created_at " +
+      "SELECT u.user_name, u.user_img, m.matching_sloc, m.matching_eloc, m.matching_message, m.matching_companion, m.matching_saddr, m.matching_eaddr, m.matching_created_at " +
     "FROM matching as m " +
     "LEFT JOIN user as u ON m.user_idx = u.user_idx " +
     "WHERE m.matching_sloc REGEXP ? AND m.matching_eloc REGEXP ?" ;

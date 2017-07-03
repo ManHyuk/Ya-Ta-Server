@@ -53,25 +53,31 @@ exports.register = async(req, res, next) => {
 
 
 };
-// 차주 / 매칭 확인
-exports.confirmed = async(req, res, next) => {
+// 차주 / 매칭 승낙
+exports.approved = async(req, res, next) => {
   let result = '';
   try {
-    const confirm_data = {
+    const approved_data = {
       a_idx: req.params.applying_idx
 
     };
 
-
+    result = await matchModel.approved(approved_data);
   }catch (error) {
-
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
 
   }
-
+  return res.status(200).json(res_msg[1200])
 };
 
 
-// 차주 / 매칭 승낙
+// 차주 / 매칭 완료
 exports.matching = async(req, res, next) => {
   let result ='';
   try {
@@ -88,7 +94,7 @@ exports.matching = async(req, res, next) => {
       return res.status(400).json(error);
     }
   }
-  return res.json(res_msg[1200]);
+  return res.status(200).json(res_msg[1200]);
 };
 
 
@@ -112,7 +118,7 @@ exports.finished = async(req, res, next) => {
     }
   }
 
-  return res.json(res_msg[1200])
+  return res.status(200).json(res_msg[1200])
 };
 
 

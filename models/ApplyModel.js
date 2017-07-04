@@ -7,7 +7,7 @@ const pool = mysql.createPool(DBConfig);
 exports.search = (search_data) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "SELECT u.user_name, u.user_img, m.matching_sloc, m.matching_eloc, m.matching_message, m.matching_companion, m.matching_saddr, m.matching_eaddr, m.matching_created_at " +
+      "SELECT m.matching_idx, u.user_name, u.user_img, m.matching_sloc, m.matching_eloc, m.matching_message, m.matching_companion, m.matching_saddr, m.matching_eaddr, m.matching_created_at " +
     "FROM matching as m " +
     "LEFT JOIN user as u ON m.user_idx = u.user_idx " +
     "WHERE m.matching_sloc REGEXP ? AND m.matching_eloc REGEXP ?" ;
@@ -25,9 +25,9 @@ exports.search = (search_data) => {
 exports.apply = (apply_data) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "INSERT INTO applying(user_idx, matching_idx, applying_message) " +
-      "VALUES (?, ?, ?) ";
-    pool.query(sql, [apply_data.user_idx, apply_data.matching_idx, apply_data.apply_message], (err, rows) => {
+      "INSERT INTO applying(user_idx, matching_idx, applying_message, applying_companion) " +
+      "VALUES (?, ?, ?, ?) ";
+    pool.query(sql, [apply_data.user_idx, apply_data.matching_idx, apply_data.apply_message, apply_data.apply_companion], (err, rows) => {
      if (err){
        reject(err)
      } else {
@@ -39,9 +39,82 @@ exports.apply = (apply_data) => {
        }
      }
     });
+  }).then(() => { // apply시 matching 상태 1로 변경
+    return new Promise((resolve, reject) => {
+      const sql =
+        `
+        UPDATE matching
+        SET matching_type = 1
+        WHERE matching_idx = ?
+        `;
+      pool.query(sql, [apply_data.matching_idx], (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    })
+  })
+};
+
+exports.approved = (complete_data) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      `
+      UPDATE matching
+      SET matching_type = 2
+      WHERE matching_idx = ?
+      `;
+
+    pool.query(sql, [complete_data.m_idx], (err, rows) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(rows)
+      }
+    });
+  });
+
+};
+
+exports.matching = (match_data) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      `
+      UPDATE applying
+      SET applying_type = 2
+      WHERE applying_idx = ?
+      `;
+
+    pool.query(sql, [match_data], (err,rows) => {
+      if(err){
+        reject(err)
+      }else{
+        resolve(rows)
+      }
+    });
   });
 };
 
+exports.finished = (finished_data) => {
+  return new Promise((resolve, reject) => {
+
+    const sql =
+      `
+      UPDATE applying
+      SET applying_type = 3
+      WHERE applying_idx = ?
+      `;
+    pool.query(sql, [finished_data.a_idx], (err, rows) => {
+      if (err) {
+        reject(err)
+      }else {
+        resolve(rows)
+      }
+    });
+  });
+};
 
 exports.detail = (detail_data) => {
   return new Promise((resolve, reject) => {

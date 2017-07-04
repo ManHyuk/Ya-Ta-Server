@@ -53,13 +53,12 @@ exports.register = async(req, res, next) => {
 
 
 };
-// 차주 / 매칭 승낙
+// 차주 / 매칭 승낙 누르면 타입 바꾸고 정보 보여주기
 exports.approved = async(req, res, next) => {
   let result = '';
   try {
     const approved_data = {
       a_idx: req.params.applying_idx
-
     };
 
     result = await matchModel.approved(approved_data);
@@ -77,7 +76,7 @@ exports.approved = async(req, res, next) => {
 };
 
 
-// 차주 / 매칭 완료
+// 차주 / 매칭 완료  없어도 될듯
 exports.matching = async(req, res, next) => {
   let result ='';
   try {
@@ -104,7 +103,7 @@ exports.finished = async(req, res, next) => {
   let result = '';
   try {
     const finished_data = {
-      a_idx: req.params.applying_idx
+      m_idx: req.params.matching_idx
     };
 
     result = await matchModel.finished(finished_data);

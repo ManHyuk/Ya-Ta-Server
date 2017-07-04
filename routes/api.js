@@ -32,13 +32,19 @@ module.exports = (router) => {
   router.route('/owner/match/detail/:applying_idx')
     .get(authCtrl.auth, matchCtrl.detail); // 차주 / 운전자 상세보기
 
-  router.route('owner/match/approve/:applying_idx')
-    .put(authCtrl.auth, matchCtrl.approved); // 차주 / 운전자 매칭 승낙
-  router.route('owner/match/matching/:applying_idx')
-    .put(authCtrl.auth, matchCtrl.matching); // 차주 / 운전자 매칭 완료
-  router.route('owner/match/finish/:applying_idx')
-    .put(authCtrl.auth, matchCtrl.finished);
 
+  // Matching
+  router.route('/owner/match/approve/:applying_idx')
+    .put(authCtrl.auth, matchCtrl.approved); // 차주 / 운전자 매칭 승낙
+  router.route('/owner/match/matching/:applying_idx')
+    .put(authCtrl.auth, matchCtrl.matching); // 차주 / 운전자 매칭 완료
+  router.route('/owner/match/finish/:matching_idx')
+    .put(authCtrl.auth, matchCtrl.finished); // 차주 / 운전자 매칭 종료
+
+  router.route('/driver/match/approve/:matching_idx')
+    .put(authCtrl.auth, applyCtrl.approved);
+  router.route('/dirver/match/finish/:matching_idx')
+    .put(authCtrl.auth, applyCtrl.finished);
 
 
   // DRIVER ( Apply )

@@ -57,32 +57,65 @@ exports.register = (owner_data) => {
 };
 
 exports.approved = (approved_data) => {
-  return new Promise((resolve, rejcet) => {
+  return new Promise((resolve, reject) => {
+
     const sql =
       `
       UPDATE applying as a
       LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
-      SET a.applying_type = 1 , m.matching_type = 1
+      SET a.applying_type = 1 , m.matching_type = 2
       WHERE a.applying_idx = ?
       `;
-    pool.query(sql, [matching_data.a_idx], (err,rows) => {
+
+    pool.query(sql, [approved_data.a_idx], (err,rows) => {
       if (err) {
         reject(err);
       } else {
         resolve(rows);
       }
     });
+  }).then((approved_data) => {
+    return new Promise((reslove, reject) => {
+      const sql =
+        `
+        SELECT
+          a.applying_idx,
+          a.matching_idx,
+          u.user_name,
+          u.user_age,
+          r.rating_star,
+          a.applying_companion,
+          u.user_career,
+          a.applying_message
+          a.applying_type
+
+        FROM applying as a
+          LEFT JOIN user As u ON a.user_idx = u.user_idx
+          LEFT JOIN matching As m ON a.matching_idx = m.matching_idx
+          LEFT JOIN rating As r ON a.user_idx = r.receive_user_idx
+        WHERE a.applying_idx = ?
+        `;
+
+      pool.query(sql, [approved_data.a_idx], (err, rows) => {
+        if(err){
+          reject(err)
+        } else {
+          reslove(rows)
+        }
+      });
+    })
   });
 };
 
 
+// FIXME 쿼리수정
 exports.matching = (matching_data) => {
   return new Promise((resolve, reject) => {
     const sql =
       `
       UPDATE applying as a
       LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
-      SET a.applying_type = 2 , m.matching_type = 2
+      SET m.matching_type = 2
       WHERE a.applying_idx = ?
       `;
     pool.query(sql, [matching_data.a_idx], (err,rows) => {
@@ -100,12 +133,11 @@ exports.finished = (finished_data) => {
   return new Promise((resolve, reject) => {
     const sql =
       `
-      UPDATE applying as a
-      LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
-      SET a.applying_type = 3 , m.matching_type = 3
-      WHERE a.applying_idx = ?
+      UPDATE matching as m
+        SET m.matching_type = 3
+      WHERE m.matching_idx = ?
       `;
-    pool.query(sql, [], (err, rows) => {
+    pool.query(sql, [finished_data.m_idx], (err, rows) => {
       if (err) {
         reject(err);
       } else {

@@ -17,6 +17,7 @@ exports.register = async(req, res, next) => {
   let result = '';
   try {
     const user_data = {
+
       user_id: req.body.id,
       user_password: config.do_cipher(req.body.pw2),
       user_name: req.body.name,

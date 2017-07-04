@@ -36,13 +36,14 @@ module.exports = (router) => {
   // Matching
   router.route('/owner/match/approve/:applying_idx')
     .put(authCtrl.auth, matchCtrl.approved); // 차주 / 운전자 매칭 승낙
-  router.route('/owner/match/matching/:applying_idx')
-    .put(authCtrl.auth, matchCtrl.matching); // 차주 / 운전자 매칭 완료
+  router.route('/owner/match/coplete/:applying_idx')
+    .put(authCtrl.auth, matchCtrl.completed); // 차주 / 운전자 매칭 완료
   router.route('/owner/match/finish/:matching_idx')
     .put(authCtrl.auth, matchCtrl.finished); // 차주 / 운전자 매칭 종료
 
-  router.route('/driver/match/approve/:matching_idx')
-    .put(authCtrl.auth, applyCtrl.approved);
+
+  router.route('/driver/match/complete/:matching_idx')
+    .put(authCtrl.auth, applyCtrl.completed);
   router.route('/dirver/match/finish/:matching_idx')
     .put(authCtrl.auth, applyCtrl.finished);
 
@@ -52,6 +53,8 @@ module.exports = (router) => {
     .post(authCtrl.auth, applyCtrl.apply); // 운전자 / 매칭 신청
   router.route('/driver/apply/search/:sloc/:eloc')
     .get(authCtrl.auth, applyCtrl.search); // 운전자 / 차주 검색
+  router.route('/driver/apply/list')
+    .get(authCtrl.auth, applyCtrl.list);
 
   router.route('/driver/apply/detail/:matching_idx') // TODO 로직 확인
     .get(authCtrl.auth, applyCtrl.detail); // 운전자 / 차주 상세보기

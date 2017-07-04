@@ -9,7 +9,7 @@ exports.list = (match_data) =>{
   return new Promise((resolve, reject )=> {
     console.log(match_data);
     const sql =
-      "SELECT applying_created_at, applying_message, user_name, user_img " +
+      "SELECT a.applying_idx, m.matching_idx, applying_created_at, applying_message, user_name, user_img " +
       "FROM applying as a "+
       "LEFT JOIN user as u ON a.user_idx = u.user_idx "+
       "LEFT JOIN matching as m ON a.matching_idx = m.matching_idx "+
@@ -109,16 +109,16 @@ exports.approved = (approved_data) => {
 
 
 // FIXME 쿼리수정
-exports.matching = (matching_data) => {
+exports.completed = (completed_data) => {
   return new Promise((resolve, reject) => {
     const sql =
       `
       UPDATE applying as a
-      LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
+        LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
       SET m.matching_type = 2
       WHERE a.applying_idx = ?
       `;
-    pool.query(sql, [matching_data.a_idx], (err,rows) => {
+    pool.query(sql, [completed_data.a_idx], (err,rows) => {
       if (err) {
         reject(err);
       } else {
@@ -152,10 +152,9 @@ exports.finished = (finished_data) => {
 
 exports.detail = (detail_data) => {
   return new Promise((resolve, reject) => {
-
     const sql =
       `
-      SELECT AVG (rating_star) as rating_star, applying_message, user_name, user_age, user_career, applying_companion
+      SELECT a.applying_idx, AVG (rating_star) as rating_star, applying_message, user_name, user_age, user_career, applying_companion
       FROM applying AS a
       LEFT JOIN user AS u ON a.user_idx = u.user_idx
       LEFT JOIN rating AS r ON r.receive_user_idx = a.user_idx WHERE applying_idx = ? 

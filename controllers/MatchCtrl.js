@@ -77,13 +77,13 @@ exports.approved = async(req, res, next) => {
 
 
 // 차주 / 매칭 완료  없어도 될듯
-exports.matching = async(req, res, next) => {
+exports.completed = async(req, res, next) => {
   let result ='';
   try {
-    const matching_data = {
+    const completed_data = {
       a_idx: req.params.applying_idx,
     };
-    result = await matchModel.matching(matching_data)
+    result = await matchModel.completed(completed_data)
   }catch(error) {
     if (isNaN(error)) {
       console.log(error);

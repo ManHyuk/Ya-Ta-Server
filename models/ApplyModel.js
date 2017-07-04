@@ -4,6 +4,36 @@ const mysql = require('mysql');
 const DBConfig = require('./../config/DBConfig');
 const pool = mysql.createPool(DBConfig);
 
+exports.list = (list_data) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      `
+      SELECT
+      
+        m.matching_idx,
+        a.applying_idx,
+        u.user_name,
+        m.matching_sloc,
+        m.matching_eloc,
+        m.matching_message,
+        m.matching_time
+        
+      FROM matching As m
+      LEFT JOIN applying As a ON m.matching_idx = a.matching_idx
+      LEFT JOIN user As u ON m.user_idx = u.user_idx
+      WHERE a.user_idx = ?
+      `;
+
+    pool.query(sql, [list_data.u_idx], (err,rows) => {
+      if (err) {
+        reject(err)
+      }else{
+        resolve(rows)
+      }
+    });
+  });
+};
+
 exports.search = (search_data) => {
   return new Promise((resolve, reject) => {
     const sql =
@@ -58,27 +88,28 @@ exports.apply = (apply_data) => {
   })
 };
 
-exports.approved = (complete_data) => {
-  return new Promise((resolve, reject) => {
-    const sql =
-      `
-      UPDATE matching
-      SET matching_type = 2
-      WHERE matching_idx = ?
-      `;
 
-    pool.query(sql, [complete_data.m_idx], (err, rows) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(rows)
-      }
-    });
-  });
+// exports.approved = (approved_data) => {
+//   return new Promise((resolve, reject) => {
+//     const sql =
+//       `
+//       UPDATE matching
+//       SET matching_type = 2
+//       WHERE matching_idx = ?
+//       `;
+//
+//     pool.query(sql, [approved_data.m_idx], (err, rows) => {
+//       if (err) {
+//         reject(err)
+//       } else {
+//         resolve(rows)
+//       }
+//     });
+//   });
+//
+// };
 
-};
-
-exports.matching = (match_data) => {
+exports.completed = (completed_data) => {
   return new Promise((resolve, reject) => {
     const sql =
       `
@@ -87,7 +118,7 @@ exports.matching = (match_data) => {
       WHERE applying_idx = ?
       `;
 
-    pool.query(sql, [match_data], (err,rows) => {
+    pool.query(sql, [completed_data.a_idx], (err,rows) => {
       if(err){
         reject(err)
       }else{
@@ -120,7 +151,7 @@ exports.detail = (detail_data) => {
   return new Promise((resolve, reject) => {
 
     const sql =
-      "SELECT AVG (rating_star) AS rating_star, matching_sloc, matching_eloc, user_name, user_age, matching_companion, matching_message, user_car "+
+      "SELECT m.matching_idx, AVG (rating_star) AS rating_star, matching_sloc, matching_eloc, user_name, user_age, matching_companion, matching_message, user_car "+
       "FROM matching AS m " +
       "LEFT JOIN user AS u ON m.user_idx = u.user_idx "+
       "LEFT JOIN rating AS r ON r.receive_user_idx = m.user_idx WHERE matching_idx = ? ";

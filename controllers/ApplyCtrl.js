@@ -3,6 +3,28 @@
 const applyModel = require('../models/ApplyModel');
 const res_msg = require('../errors.json');
 
+exports.list = async(req, res, next) => {
+  let result = '';
+  try {
+
+    const list_data = {
+      u_idx : req.user_idx
+    };
+
+    console.log(list_data);
+    result = await applyModel.list(list_data);
+  }catch(error){
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(error);
+    } else {
+      console.log(error);
+      return res.status(400).json(error);
+    }
+
+  }
+  return res.status(200).json({result});
+};
 
 // 운전자 -> 차주 매칭 검색 (조회)
 exports.search = async(req, res, next) => {
@@ -60,34 +82,35 @@ exports.apply = async(req, res, next) => {
 };
 
 // 운전자 / 차주 매칭 승낙 -> 매칭 타입 업데이트
-exports.approved = async(req, res,next)=>{
+// 없어도 될듯
+// exports.approved = async(req, res,next)=>{
+//   let result = '';
+//   try {
+//     const approved_data = {
+//       m_idx: req.params.matching_idx
+//     };
+//
+//     result = await applyModel.approved(approved_data);
+//   }catch (error) {
+//     if (isNaN(error)) {
+//       console.log(error);
+//       return res.status(500).json(res_msg[9500]);
+//     } else {
+//       console.log(error);
+//       return res.status(400).json(res_msg[8400]);
+//     }
+//   }
+//   return res.status(200).json(res_msg[1200])
+// };
+
+exports.completed = async(req, res, next) => {
   let result = '';
   try {
-    const approved_data = {
-      m_idx: req.params.matching_idx
-    };
-
-    result = await applyModel.approved(complete_data);
-  }catch (error) {
-    if (isNaN(error)) {
-      console.log(error);
-      return res.status(500).json(res_msg[9500]);
-    } else {
-      console.log(error);
-      return res.status(400).json(res_msg[8400]);
-    }
-  }
-  return res.status(200).json(res_msg[1200])
-};
-
-exports.matching = async(req, res, next) => {
-  let result = '';
-  try {
-    const match_data = {
+    const completed_data = {
       a_idx: req.params.applying_idx
     };
 
-    result = await applyModel.matching(match_data);
+    result = await applyModel.completed(completed_data);
   }catch (error){
     if (isNaN(error)) {
       console.log(error);

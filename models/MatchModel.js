@@ -57,7 +57,7 @@ exports.register = (owner_data) => {
     return new Promise((resolve, reject) => {
       const sql =
         `
-        
+
         `;
       pool.query(sql, [owner_data], (err, rows) => {
         if (err){
@@ -173,7 +173,7 @@ exports.detail = (detail_data) => {
       SELECT a.applying_idx, AVG (rating_star) as rating_star, applying_message, user_name, user_age, user_career, applying_companion
       FROM applying AS a
       LEFT JOIN user AS u ON a.user_idx = u.user_idx
-      LEFT JOIN rating AS r ON r.receive_user_idx = a.user_idx WHERE applying_idx = ? 
+      LEFT JOIN rating AS r ON r.receive_user_idx = a.user_idx WHERE applying_idx = ?
       `;
 
     pool.query(sql, [detail_data.applying_idx], (err, rows) => {
@@ -187,4 +187,26 @@ exports.detail = (detail_data) => {
 };
 
 
+// 매칭 이력 조회
+exports.inquiry = (inquiry_data)=> {
+  return new Promise((resolve, reject) => {
+    //applying_idx와 a.matching_idx 는 확인결과를 위한 값이므로 삭제해도 가능
+    const sql =
+    "SELECT DISTINCT applying_idx, a.matching_idx, user_img, user_name, matching_sloc, matching_eloc, matching_time "+
+    "FROM matching as m " +
+    "LEFT JOIN applying as a ON m.matching_idx = a.matching_idx "+
+    "LEFT JOIN user as u ON u.user_idx = a.user_idx "+
+    "WHERE (m.user_idx = ?) AND (applying_type =3) ";
+    // Q. applying_type = 3인값만 필요한지 AND 조건 달아서 matching_type =3인것도 확인해야 하는지
 
+    pool.query(sql, [inquiry_data.user_idx],(err,rows)=>{
+      if(err){
+        reject(err);
+
+      }else{
+        resolve(rows);
+      }
+    });
+
+  });
+};

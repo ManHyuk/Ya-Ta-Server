@@ -9,7 +9,7 @@ exports.list = (list_data) => {
     const sql =
       `
       SELECT
-      
+
         m.matching_idx,
         a.applying_idx,
         u.user_name,
@@ -19,7 +19,7 @@ exports.list = (list_data) => {
         m.matching_eaddr,
         m.matching_message,
         m.matching_time
-        
+
       FROM matching As m
       LEFT JOIN applying As a ON m.matching_idx = a.matching_idx
       LEFT JOIN user As u ON m.user_idx = u.user_idx
@@ -166,5 +166,29 @@ exports.detail = (detail_data) => {
         resolve(rows);
       }
     });
+  });
+};
+
+// 매칭 이력 조회
+exports.inquiry = (inquiry_data)=> {
+  return new Promise((resolve, reject) => {
+
+    const sql =
+    "SELECT DISTINCT rating_star, m.matching_idx, user_img, user_name, matching_sloc, matching_eloc, matching_time "+
+    "FROM applying as a "+
+    "LEFT JOIN matching as m ON m.matching_idx = a.matching_idx "+
+    "LEFT JOIN user as u ON u.user_idx = m.user_idx "+
+    "LEFT JOIN rating as r ON r.receive_user_idx = m.user_idx "+
+    "WHERE (a.user_idx = ?) AND (matching_type =3) ";
+
+    pool.query(sql, [inquiry_data.user_idx],(err,rows)=>{
+      if(err){
+        reject(err);
+
+      }else{
+        resolve(rows);
+      }
+    });
+
   });
 };

@@ -169,3 +169,29 @@ exports.detail = async(req, res, next) =>{
   }
   return res.status(200).json({result});
 }
+
+// 매칭 이력 조회
+exports.inquiry = async(req,res,next)=>{
+  let result ='';
+  try {
+    const inquiry_data ={
+      user_idx: req.user_idx, //운전자 입장일 때
+    };
+    result = await applyModel.inquiry(inquiry_data);
+    console.log(req.user_idx);
+  }catch(error){
+
+    if(isNAN(error)){
+
+      return res.status(500).json(res_msg[9500]);
+
+    } else{
+
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+
+    }
+  }
+  return res.status(200).json({result});
+
+}

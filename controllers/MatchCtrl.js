@@ -153,3 +153,23 @@ exports.detail = async(req, res, next) =>{
   return res.status(200).json({result});
 };
 
+// 매칭 이력 조회
+exports.inquiry = async(req,res,next)=>{
+  let result ='';
+  try {
+    const inquiry_data ={
+      user_idx: req.params.user_idx, //차주 입장일 때
+    };
+
+    result = await applyModel.inquiry(inquiry_data);
+  }catch(error){
+    if(isNAN(error)){
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else{
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
+  }
+  return res.status(200).json({result});
+}

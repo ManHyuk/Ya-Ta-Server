@@ -113,11 +113,12 @@ exports.completed = (completed_data) => {
   return new Promise((resolve, reject) => {
     const sql =
       `
-      UPDATE applying
-      SET applying_type = 2
-      WHERE applying_idx = ?
+      UPDATE applying AS a
+      SET a.applying_type = 2
+      WHERE a.applying_idx = ?
       `;
 
+    console.log(completed_data);
     pool.query(sql, [completed_data.a_idx], (err,rows) => {
       if(err){
         reject(err)

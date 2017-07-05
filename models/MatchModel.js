@@ -7,13 +7,13 @@ const pool = mysql.createPool(DBConfig);
 
 exports.list = (match_data) =>{
   return new Promise((resolve, reject )=> {
-    console.log(match_data);
+
     const sql =
       "SELECT a.applying_idx, m.matching_idx, applying_created_at, applying_message, user_name, user_img " +
       "FROM applying as a "+
       "LEFT JOIN user as u ON a.user_idx = u.user_idx "+
       "LEFT JOIN matching as m ON a.matching_idx = m.matching_idx "+
-      "WHERE a.matching_idx = ?";
+      "WHERE a.matching_idx = ? ";
     pool.query(sql, [match_data.matching_idx],(err,rows)=>{
       if (err){
         reject(err);
@@ -53,6 +53,21 @@ exports.register = (owner_data) => {
         }
       }
     });
+  }).then((owner_data) => {
+    return new Promise((resolve, reject) => {
+      const sql =
+        `
+        
+        `;
+      pool.query(sql, [owner_data], (err, rows) => {
+        if (err){
+          reject(err)
+        }else{
+          resolve(rows)
+        }
+
+      });
+    });
   });
 };
 
@@ -61,8 +76,8 @@ exports.approved = (approved_data) => {
 
     const sql =
       `
-      UPDATE applying as a
-      LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
+      UPDATE applying AS a
+      LEFT JOIN matching AS m ON a.matching_idx = m.matching_idx
       SET a.applying_type = 1 , m.matching_type = 2
       WHERE a.applying_idx = ?
       `;
@@ -71,11 +86,11 @@ exports.approved = (approved_data) => {
       if (err) {
         reject(err);
       } else {
-        resolve(rows);
+        resolve(approved_data.a_idx);
       }
     });
   }).then((approved_data) => {
-    return new Promise((reslove, reject) => {
+    return new Promise((resolve, reject) => {
       const sql =
         `
         SELECT
@@ -86,21 +101,22 @@ exports.approved = (approved_data) => {
           r.rating_star,
           a.applying_companion,
           u.user_career,
-          a.applying_message
+          a.applying_message,
           a.applying_type
 
-        FROM applying as a
-          LEFT JOIN user As u ON a.user_idx = u.user_idx
+        FROM applying AS a
+          LEFT JOIN user AS u ON a.user_idx = u.user_idx
           LEFT JOIN matching As m ON a.matching_idx = m.matching_idx
-          LEFT JOIN rating As r ON a.user_idx = r.receive_user_idx
+          LEFT JOIN rating AS r ON a.user_idx = r.receive_user_idx
         WHERE a.applying_idx = ?
         `;
 
-      pool.query(sql, [approved_data.a_idx], (err, rows) => {
+      console.log(approved_data);
+      pool.query(sql, [approved_data], (err, rows) => {
         if(err){
           reject(err)
         } else {
-          reslove(rows)
+          resolve(rows[0])
         }
       });
     })

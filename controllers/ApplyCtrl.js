@@ -110,6 +110,7 @@ exports.completed = async(req, res, next) => {
       a_idx: req.params.applying_idx
     };
 
+    console.log(req.params.applying_idx);
     result = await applyModel.completed(completed_data);
   }catch (error){
     if (isNaN(error)) {
@@ -128,8 +129,9 @@ exports.finished = async(req, res, next) => {
   let result ='';
   try {
     const finished_data = {
-      m_idx: req.params.matching_idx
+      a_idx: req.params.applying_idx
     };
+    console.log(finished_data.a_idx);
     result = await applyModel.finished(finished_data);
   }catch (error) {
     if (isNaN(error)) {

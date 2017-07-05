@@ -36,15 +36,17 @@ module.exports = (router) => {
   // Matching
   router.route('/owner/match/approve/:applying_idx')
     .put(authCtrl.auth, matchCtrl.approved); // 차주 / 운전자 매칭 승낙
-  router.route('/owner/match/coplete/:applying_idx')
+
+  router.route('/owner/match/complete/:applying_idx')
     .put(authCtrl.auth, matchCtrl.completed); // 차주 / 운전자 매칭 완료
+
   router.route('/owner/match/finish/:matching_idx')
     .put(authCtrl.auth, matchCtrl.finished); // 차주 / 운전자 매칭 종료
 
 
-  router.route('/driver/match/complete/:matching_idx')
+  router.route('/driver/match/complete/:applying_idx')
     .put(authCtrl.auth, applyCtrl.completed);
-  router.route('/dirver/match/finish/:matching_idx')
+  router.route('/driver/match/finish/:applying_idx')
     .put(authCtrl.auth, applyCtrl.finished);
 
 

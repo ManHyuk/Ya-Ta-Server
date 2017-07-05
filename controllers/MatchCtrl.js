@@ -7,6 +7,7 @@ exports.list = async(req, res, next) => {
   let result = '';
   try {
     const match_data = {
+      user_idx: req.user_idx,
       matching_idx: req.params.matching_idx,
     };
 
@@ -49,7 +50,11 @@ exports.register = async(req, res, next) => {
       return res.status(400).json(res_msg[8400]);
     }
   }
-  return res.status(200).json(res_msg[1200]);
+  return res.status(200).json({
+    "status": true,
+    "message": "success",
+    "result": result
+  });
 
 
 };
@@ -72,7 +77,7 @@ exports.approved = async(req, res, next) => {
     }
 
   }
-  return res.status(200).json(res_msg[1200])
+  return res.status(200).json(result)
 };
 
 
@@ -81,9 +86,11 @@ exports.completed = async(req, res, next) => {
   let result ='';
   try {
     const completed_data = {
-      a_idx: req.params.applying_idx,
+      a_idx: req.params.applying_idx
     };
-    result = await matchModel.completed(completed_data)
+
+    result = await matchModel.completed(completed_data);
+
   }catch(error) {
     if (isNaN(error)) {
       console.log(error);
@@ -105,6 +112,7 @@ exports.finished = async(req, res, next) => {
     const finished_data = {
       m_idx: req.params.matching_idx
     };
+
 
     result = await matchModel.finished(finished_data);
   }catch (error) {

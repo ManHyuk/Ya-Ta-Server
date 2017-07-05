@@ -4,6 +4,28 @@ const mysql = require('mysql');
 const DBConfig = require('./../config/DBConfig');
 const pool = mysql.createPool(DBConfig);
 
+exports.owner = (owner_data) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      `
+      SELECT
+        m.matching_idx, 
+        u.user_name,
+        u.user_type
+      FROM matching AS m
+        LEFT JOIN user AS u ON m.user_idx = u.user_idx
+      WHERE m.user_idx=?
+      `;
+    pool.query(sql, [owner_data.user_idx], (err,rows) => {
+      if(err){
+        reject(err)
+      }else{
+        resolve(rows[0])
+      }
+    });
+  });
+
+};
 
 exports.list = (match_data) =>{
   return new Promise((resolve, reject )=> {
@@ -24,10 +46,10 @@ exports.list = (match_data) =>{
   });
 };
 
-exports.register = (owner_data) => {
+exports.register = (owner_data, user_idx) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO matching(user_idx, matching_slat, matching_slng, matching_sloc, matching_saddr, matching_elat, matching_elng, matching_eloc, matching_eaddr, matching_companion, matching_time, matching_message) " +
-    "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+      "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
     pool.query(sql, [owner_data.owner_idx,
       owner_data.owner_slat,
@@ -46,29 +68,30 @@ exports.register = (owner_data) => {
       } else {
         if (rows.affectedRows == 1){ // 차주 / 매칭 등록 시도
 
-          resolve(rows);
+          resolve(null);
         } else {
           const _err = new Error("Owner Match Register Error");
           reject(_err);
         }
       }
     });
-  }).then((owner_data) => {
+  }).then(() => {
     return new Promise((resolve, reject) => {
       const sql =
         `
-
+        UPDATE user AS u 
+          SET u.user_type =1
+        WHERE u.user_idx = ?;
         `;
-      pool.query(sql, [owner_data], (err, rows) => {
-        if (err){
+      pool.query(sql, [user_idx], (err,rows) => {
+        if (err) {
           reject(err)
-        }else{
+        } else {
           resolve(rows)
         }
-
       });
     });
-  });
+  })
 };
 
 exports.approved = (approved_data) => {
@@ -150,7 +173,8 @@ exports.finished = (finished_data) => {
     const sql =
       `
       UPDATE matching as m
-        SET m.matching_type = 3
+        LEFT JOIN user AS u ON m.user_idx = u.user_idx
+      SET m.matching_type = 3, u.user_type=0
       WHERE m.matching_idx = ?
       `;
     pool.query(sql, [finished_data.m_idx], (err, rows) => {

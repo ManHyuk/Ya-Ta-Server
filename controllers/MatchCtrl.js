@@ -3,6 +3,26 @@
 const matchModel = require('../models/MatchModel');
 const res_msg = require('../errors.json');
 
+exports.owner = async(req, res, next) => {
+  let result ='';
+  try {
+    const owner_data = {
+      user_idx: req.user_idx
+    };
+    result = await matchModel.owner(owner_data)
+  }catch (error){
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
+
+  }
+  return res.status(200).json({result})
+};
+
 exports.list = async(req, res, next) => {
   let result = '';
   try {
@@ -39,7 +59,8 @@ exports.register = async(req, res, next) => {
       owner_message: req.body.message,
     };
 
-    result = await matchModel.register(owner_data);
+    result = await matchModel.register(owner_data, req.user_idx);
+
 
   } catch (error) {
     if (isNaN(error)) {
@@ -50,11 +71,7 @@ exports.register = async(req, res, next) => {
       return res.status(400).json(res_msg[8400]);
     }
   }
-  return res.status(200).json({
-    "status": true,
-    "message": "success",
-    "result": result
-  });
+  return res.status(200).json(res_msg[1200]);
 
 
 };
@@ -158,7 +175,7 @@ exports.inquiry = async(req,res,next)=>{
   let result ='';
   try {
     const inquiry_data ={
-      user_idx: req.params.user_idx, //차주 입장일 때
+      user_idx: req.user_idx, //차주 입장일 때
     };
 
     result = await applyModel.inquiry(inquiry_data);

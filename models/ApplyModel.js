@@ -4,6 +4,8 @@ const mysql = require('mysql');
 const DBConfig = require('./../config/DBConfig');
 const pool = mysql.createPool(DBConfig);
 
+
+
 exports.list = (list_data) => {
   return new Promise((resolve, reject) => {
     const sql =
@@ -20,9 +22,9 @@ exports.list = (list_data) => {
         m.matching_message,
         m.matching_time
 
-      FROM matching As m
-      LEFT JOIN applying As a ON m.matching_idx = a.matching_idx
-      LEFT JOIN user As u ON m.user_idx = u.user_idx
+      FROM matching AS m
+        LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
+        LEFT JOIN user AS u ON m.user_idx = u.user_idx
       WHERE a.user_idx = ?
       `;
 
@@ -35,6 +37,7 @@ exports.list = (list_data) => {
     });
   });
 };
+
 
 exports.search = (search_data) => {
   return new Promise((resolve, reject) => {

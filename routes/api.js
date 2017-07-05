@@ -25,26 +25,26 @@ module.exports = (router) => {
 
 
   // OWNER ( Match )
+  router.route('/owner')
+    .get(authCtrl.auth, matchCtrl.owner);
   router.route('/owner/match/register')
     .post(authCtrl.auth, matchCtrl.register); // 차주 / 매칭 신청
   router.route('/owner/match/list/:matching_idx')
     .get(authCtrl.auth, matchCtrl.list); // 차주 / 운전자 신청 조회
   router.route('/owner/match/detail/:applying_idx')
     .get(authCtrl.auth, matchCtrl.detail); // 차주 / 운전자 상세보기
-  router.route('/owner/apply/inquiry/:user_idx')
+  router.route('/owner/apply/inquiry')
     .get(authCtrl.auth, matchCtrl.inquiry);
 
-  // Matching
+
+  // OWNER MATCHING
   router.route('/owner/match/approve/:applying_idx')
     .put(authCtrl.auth, matchCtrl.approved); // 차주 / 운전자 매칭 승낙
-
   router.route('/owner/match/complete/:applying_idx')
     .put(authCtrl.auth, matchCtrl.completed); // 차주 / 운전자 매칭 완료
-
   router.route('/owner/match/finish/:matching_idx')
     .put(authCtrl.auth, matchCtrl.finished); // 차주 / 운전자 매칭 종료
-
-
+  // DRIVER MATCHING
   router.route('/driver/match/complete/:applying_idx')
     .put(authCtrl.auth, applyCtrl.completed);
   router.route('/driver/match/finish/:applying_idx')
@@ -59,7 +59,7 @@ module.exports = (router) => {
   router.route('/driver/apply/list')
     .get(authCtrl.auth, applyCtrl.list);
   router.route('/driver/apply/inquiry/')
-    .get(authCtrl.auth, applyCtrl.inquiry);
+    .get(authCtrl.auth, applyCtrl.inquiry); // 매칭 이력 조회
   router.route('/driver/apply/detail/:matching_idx') // TODO 로직 확인
     .get(authCtrl.auth, applyCtrl.detail); // 운전자 / 차주 상세보기
 

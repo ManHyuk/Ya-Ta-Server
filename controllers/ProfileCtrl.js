@@ -36,7 +36,10 @@ exports.updating = async(req, res, next) => {
   let result ='';
 
   try {
-    const profile_data = [];
+    const profile_data = {
+      files: req.files
+    };
+
 
     console.log(req.files);
     for (let i=0, len=req.files.length; i<len; i++) {
@@ -44,7 +47,7 @@ exports.updating = async(req, res, next) => {
       profile_data[i].push(req.files[i].location, parseInt(req.params.user_idx, 10));
     }
     console.log(profile_data);
-    result = await profileModel.updating(profile_data);
+    result = await profileModel.updating(profile_data.files);
   }catch (error){
     if (isNaN(error)) {
       console.log(error);

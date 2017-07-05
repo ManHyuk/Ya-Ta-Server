@@ -31,7 +31,8 @@ module.exports = (router) => {
     .get(authCtrl.auth, matchCtrl.list); // 차주 / 운전자 신청 조회
   router.route('/owner/match/detail/:applying_idx')
     .get(authCtrl.auth, matchCtrl.detail); // 차주 / 운전자 상세보기
-
+  router.route('/owner/apply/inquiry/:user_idx')
+    .get(authCtrl.auth, matchCtrl.inquiry);
 
   // Matching
   router.route('/owner/match/approve/:applying_idx')
@@ -57,7 +58,8 @@ module.exports = (router) => {
     .get(authCtrl.auth, applyCtrl.search); // 운전자 / 차주 검색
   router.route('/driver/apply/list')
     .get(authCtrl.auth, applyCtrl.list);
-
+  router.route('/driver/apply/inquiry/')
+    .get(authCtrl.auth, applyCtrl.inquiry);
   router.route('/driver/apply/detail/:matching_idx') // TODO 로직 확인
     .get(authCtrl.auth, applyCtrl.detail); // 운전자 / 차주 상세보기
 

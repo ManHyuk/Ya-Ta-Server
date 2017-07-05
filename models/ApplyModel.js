@@ -15,6 +15,8 @@ exports.list = (list_data) => {
         u.user_name,
         m.matching_sloc,
         m.matching_eloc,
+        m.matching_saddr,
+        m.matching_eaddr,
         m.matching_message,
         m.matching_time
         

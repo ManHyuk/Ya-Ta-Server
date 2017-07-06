@@ -31,11 +31,22 @@ exports.list = (match_data) =>{
   return new Promise((resolve, reject )=> {
 
     const sql =
-      "SELECT a.applying_idx, m.matching_idx, applying_created_at, applying_message, user_name, user_img " +
-      "FROM applying as a "+
-      "LEFT JOIN user as u ON a.user_idx = u.user_idx "+
-      "LEFT JOIN matching as m ON a.matching_idx = m.matching_idx "+
-      "WHERE a.matching_idx = ? ";
+      `
+      SELECT
+        a.applying_idx,
+        m.matching_idx,
+        applying_created_at,
+        applying_message,
+        user_name,
+        user_img,
+        AVG(r.rating_star) as rating_star
+      FROM applying AS a
+        LEFT JOIN user AS u ON a.user_idx = u.user_idx
+        LEFT JOIN matching AS m ON a.matching_idx = m.matching_idx
+        LEFT JOIN rating AS r ON a.user_idx = r.receive_user_idx
+      WHERE a.matching_idx = ?
+
+      `;
     pool.query(sql, [match_data.matching_idx],(err,rows)=>{
       if (err){
         reject(err);
@@ -216,7 +227,7 @@ exports.finished = (finished_data) => {
         if(err){
           reject(err)
         }else {
-          resolve(rows)
+          resolve(rows[0])
         }
       });
     });

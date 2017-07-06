@@ -20,11 +20,13 @@ exports.list = (list_data) => {
         m.matching_saddr,
         m.matching_eaddr,
         m.matching_message,
-        m.matching_time
+        m.matching_time,
+        AVG(r.rating_star) AS rating_star
 
       FROM matching AS m
         LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
+        LEFT JOIN rating AS r ON m.user_idx = r.receive_user_idx
       WHERE a.user_idx = ?
       `;
 

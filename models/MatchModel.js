@@ -38,13 +38,13 @@ exports.list = (match_data) =>{
         applying_created_at,
         applying_message,
         user_name,
-        user_img,
-        AVG(r.rating_star) as rating_star
+        user_img
+        
       FROM applying AS a
         LEFT JOIN user AS u ON a.user_idx = u.user_idx
         LEFT JOIN matching AS m ON a.matching_idx = m.matching_idx
         LEFT JOIN rating AS r ON a.user_idx = r.receive_user_idx
-      WHERE a.matching_idx = ?
+      WHERE a.matching_idx = ? 
 
       `;
     pool.query(sql, [match_data.matching_idx],(err,rows)=>{
@@ -279,5 +279,19 @@ exports.inquiry = (inquiry_data)=> {
       }
     });
 
+  });
+};
+
+
+exports.remove = (remove_data)=>{
+  return new Promise((resolve, reject)=>{
+    const sql = "DELETE FROM matching WHERE matching_idx = ? ";
+    pool.query(sql,[remove_data.matching_idx],(err,rows)=>{
+      if(err){
+        reject(err);
+      }else{
+        resolve(rows);
+      }
+    });
   });
 };

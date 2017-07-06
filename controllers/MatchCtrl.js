@@ -202,4 +202,25 @@ exports.inquiry = async(req,res,next)=>{
 
   }
   return res.status(200).json({result});
-}
+};
+
+// 매칭 취소
+exports.remove = async(req, res, next) => {
+  let result= ``;
+
+  try {
+    const remove_data = {
+      matching_idx: req.params.matching_idx
+    };
+    result = await matchModel.remove(remove_data)
+  }catch (error){
+    if (isNaN(error)) {
+      console.log(error);
+      return res.status(500).json(res_msg[9500]);
+    } else {
+      console.log(error);
+      return res.status(400).json(res_msg[8400]);
+    }
+  }
+  return res.status(200).json(res_msg[1200]);
+};

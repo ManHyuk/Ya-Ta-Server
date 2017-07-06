@@ -45,7 +45,7 @@ exports.list = (match_data) =>{
         LEFT JOIN user AS u ON a.user_idx = u.user_idx
         LEFT JOIN matching AS m ON a.matching_idx = m.matching_idx
         LEFT JOIN rating AS r ON a.user_idx = r.receive_user_idx
-      WHERE a.matching_idx = ? 
+      WHERE (a.matching_idx = ? ) AND (a.applying_type <= 1) 
 
       `;
     pool.query(sql, [match_data.matching_idx],(err,rows)=>{

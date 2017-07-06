@@ -21,13 +21,13 @@ exports.list = (list_data) => {
         m.matching_eaddr,
         m.matching_message,
         m.matching_time,
-        AVG(r.rating_star) AS rating_star
+        r.rating_star
 
       FROM matching AS m
         LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
         LEFT JOIN rating AS r ON m.user_idx = r.receive_user_idx
-      WHERE a.user_idx = ?
+      WHERE (a.user_idx = ? ) AND (m.matching_type <= 1)
       `;
 
     pool.query(sql, [list_data.u_idx], (err,rows) => {
@@ -44,10 +44,22 @@ exports.list = (list_data) => {
 exports.search = (search_data) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "SELECT m.matching_idx, u.user_name, u.user_img, m.matching_sloc, m.matching_eloc, m.matching_message, m.matching_companion, m.matching_saddr, m.matching_eaddr, m.matching_created_at " +
-    "FROM matching as m " +
-    "LEFT JOIN user as u ON m.user_idx = u.user_idx " +
-    "WHERE m.matching_sloc REGEXP ? AND m.matching_eloc REGEXP ?" ;
+      `
+      SELECT
+        m.matching_idx,
+        u.user_name,
+        u.user_img,
+        m.matching_sloc,
+        m.matching_eloc,
+        m.matching_message,
+        m.matching_companion,
+        m.matching_saddr,
+        m.matching_eaddr,
+        m.matching_created_at
+      FROM matching AS m
+        LEFT JOIN user AS u ON m.user_idx = u.user_idx
+      WHERE (m.matching_sloc REGEXP ? AND m.matching_eloc REGEXP ?) AND (m.matching_type <= 1)
+      `;
 
     pool.query(sql, [search_data.sloc, search_data.eloc], (err, rows) => {
       if (err) {

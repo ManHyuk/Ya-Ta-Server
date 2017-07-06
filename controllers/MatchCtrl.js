@@ -94,7 +94,11 @@ exports.approved = async(req, res, next) => {
     }
 
   }
-  return res.status(200).json(result)
+  return res.status(200).json({
+    "status": true,
+    "message": "success",
+    "result": result
+  })
 };
 
 
@@ -142,7 +146,11 @@ exports.finished = async(req, res, next) => {
     }
   }
 
-  return res.status(200).json(res_msg[1200])
+  return res.status(200).json({
+    "status": true,
+    "message": "success",
+    "matching_type": 3
+  })
 };
 
 
@@ -178,15 +186,16 @@ exports.inquiry = async(req,res,next)=>{
       user_idx: req.user_idx, //차주 입장일 때
     };
 
-    result = await applyModel.inquiry(inquiry_data);
+    result = await matchModel.inquiry(inquiry_data);
   }catch(error){
-    if(isNAN(error)){
+    if (isNaN(error)) {
       console.log(error);
       return res.status(500).json(res_msg[9500]);
-    } else{
+    } else {
       console.log(error);
       return res.status(400).json(res_msg[8400]);
     }
+
   }
   return res.status(200).json({result});
 }

@@ -242,10 +242,21 @@ exports.detail = (detail_data) => {
   return new Promise((resolve, reject) => {
     const sql =
       `
-      SELECT a.applying_idx, AVG (rating_star) as rating_star, applying_message, user_name, user_age, user_career, applying_companion
+      SELECT
+        a.applying_idx,
+        AVG(rating_star) AS rating_star,
+        applying_message,
+        user_name,
+        user_age,
+        user_career,
+        applying_companion,
+        m.matching_sloc,
+        m.matching_eloc
       FROM applying AS a
-      LEFT JOIN user AS u ON a.user_idx = u.user_idx
-      LEFT JOIN rating AS r ON r.receive_user_idx = a.user_idx WHERE applying_idx = ?
+        LEFT JOIN user AS u ON a.user_idx = u.user_idx
+        LEFT JOIN rating AS r ON a.user_idx = r.receive_user_idx
+        LEFT JOIN matching AS m ON a.matching_idx = a.matching_idx
+      WHERE applying_idx = ?
       `;
 
     pool.query(sql, [detail_data.applying_idx], (err, rows) => {

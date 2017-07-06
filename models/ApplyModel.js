@@ -89,7 +89,25 @@ exports.apply = (apply_data) => {
           resolve(rows);
         }
       });
-    })
+    }).then(() => {
+      return new Promise((resolve, reject) => {
+        const sql =
+          `
+          SELECT a.matching_idx, a.applying_idx
+          FROM applying AS a
+          WHERE a.user_idx = ?
+          `;
+
+        pool.query(sql, [apply_data.user_idx], (err,rows) => {
+          if (err){
+            reject(err)
+          } else {
+            resolve(rows[0])
+          }
+        });
+
+      });
+    });
   })
 };
 
@@ -149,6 +167,24 @@ exports.finished = (finished_data) => {
       }else {
         resolve(rows)
       }
+    });
+  }).then(() => {
+    return new Promise((resolve, reject) => {
+      const sql =
+        `
+        SELECT a.matching_idx, a.applying_idx, m.user_idx, a.applying_type
+        FROM applying AS a
+          LEFT JOIN matching AS m ON a.matching_idx = m.matching_idx
+        WHERE a.applying_idx = ?        
+        `;
+
+      pool.query(sql, [finished_data.a_idx], (err,rows) => {
+        if(err){
+          reject(err)
+        }else {
+          resolve(rows)
+        }
+      });
     });
   });
 };

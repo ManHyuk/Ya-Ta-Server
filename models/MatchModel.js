@@ -184,6 +184,25 @@ exports.finished = (finished_data) => {
         resolve(rows);
       }
     });
+  }).then(() => {
+    return new Promise((resolve, reject) => {
+      const sql =
+        `
+        SELECT a.matching_idx, a.applying_idx,a.user_idx, matching_type
+        FROM matching AS m
+          LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
+        WHERE m.matching_idx = ? 
+        `;
+
+
+      pool.query(sql, [finished_data.m_idx], (err, rows) => {
+        if(err){
+          reject(err)
+        }else {
+          resolve(rows)
+        }
+      });
+    });
   });
 };
 

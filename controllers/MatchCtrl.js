@@ -126,7 +126,6 @@ exports.completed = async(req, res, next) => {
 
 
 // 차주 / 탑승 종료
-// 운전자 / 탑승 종료
 exports.finished = async(req, res, next) => {
   let result = '';
   try {
@@ -149,7 +148,8 @@ exports.finished = async(req, res, next) => {
   return res.status(200).json({
     "status": true,
     "message": "success",
-    "matching_type": 3
+    "result": result
+
   })
 };
 

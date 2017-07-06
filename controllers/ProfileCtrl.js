@@ -37,14 +37,15 @@ exports.updating = async(req, res, next) => {
 
   try {
     const profile_data = {
-      files: req.files
+      files: req.files,
+      user_idx: req.user_idx
     };
 
 
     console.log(req.files);
     for (let i=0, len=req.files.length; i<len; i++) {
       profile_data[i] = [];
-      profile_data[i].push(req.files[i].location, parseInt(req.params.user_idx, 10));
+      profile_data[i].push(req.files[i].location, parseInt(req.user_idx, 10));
     }
     console.log(profile_data);
     result = await profileModel.updating(profile_data.files);
@@ -76,7 +77,7 @@ const storageS3 = multerS3({
   }
 });
 
-exports.uploadImage = multer({storage: storageS3}).array('image', 5);
+exports.uploadImage = multer({storage: storageS3}).single('image');
 
 
 // const storage = multer.diskStorage({

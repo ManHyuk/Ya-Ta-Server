@@ -286,7 +286,7 @@ exports.inquiry = (inquiry_data)=> {
 
 exports.remove = (remove_data)=>{
   return new Promise((resolve, reject)=>{
-    const sql = "DELETE FROM matching WHERE matching_idx = ? ";
+    const sql = "DELETE FROM matching WHERE user_idx = ? ";
     pool.query(sql,[remove_data.matching_idx],(err,rows)=>{
       if(err){
         reject(err);

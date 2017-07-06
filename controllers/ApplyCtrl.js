@@ -114,7 +114,7 @@ exports.completed = async(req, res, next) => {
       a_idx: req.params.applying_idx
     };
 
-    console.log(req.params.applying_idx);
+
     result = await applyModel.completed(completed_data);
   }catch (error){
     if (isNaN(error)) {

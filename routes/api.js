@@ -28,10 +28,11 @@ module.exports = (router) => {
   router.route('/owner')
     .get(authCtrl.auth, matchCtrl.owner);
   router.route('/owner/match/register')
-    .post(authCtrl.auth, matchCtrl.register); // 차주 / 매칭 신청
+    .post(authCtrl.auth, matchCtrl.register) // 차주 / 매칭 신청
+    .delete(authCtrl.auth, matchCtrl.remove);// 차주 / 매칭 삭제
   router.route('/owner/match/list/:matching_idx')// 차주 / 운전자 신청 조회
     .get(authCtrl.auth, matchCtrl.list)
-    .delete(authCtrl.auth, matchCtrl.remove);
+
   router.route('/owner/match/detail/:applying_idx')
     .get(authCtrl.auth, matchCtrl.detail); // 차주 / 운전자 상세보기
   router.route('/owner/apply/inquiry')

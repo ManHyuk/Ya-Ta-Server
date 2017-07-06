@@ -210,7 +210,7 @@ exports.remove = async(req, res, next) => {
 
   try {
     const remove_data = {
-      matching_idx: req.params.matching_idx
+      user_idx: req.user_idx
     };
     result = await matchModel.remove(remove_data)
   }catch (error){

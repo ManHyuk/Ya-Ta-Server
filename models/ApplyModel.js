@@ -193,7 +193,7 @@ exports.finished = (finished_data) => {
 
 exports.detail = (detail_data) => {
   return new Promise((resolve, reject) => {
-
+ㅌ
     const sql =
       "SELECT m.matching_idx, AVG (rating_star) AS rating_star, matching_sloc, matching_eloc, user_name, user_age, matching_companion, matching_message, user_car "+
       "FROM matching AS m " +

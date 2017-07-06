@@ -38,7 +38,8 @@ exports.list = (match_data) =>{
         applying_created_at,
         applying_message,
         user_name,
-        user_img
+        user_img,
+        rating_star
         
       FROM applying AS a
         LEFT JOIN user AS u ON a.user_idx = u.user_idx

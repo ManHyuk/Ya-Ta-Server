@@ -6,6 +6,8 @@ const res_msg = require('../errors.json');
 const fs = require('fs');
 
 const aws = require('aws-sdk');
+const mysql = require('mysql');
+
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 
@@ -15,6 +17,7 @@ exports.inform = async (req, res, next)=>{
   try {
     const profile_data = {
       user_idx: req.user_idx,
+      user_img: req.files
     };
     result = await profileModel.inform(profile_data);
   }catch(error){
@@ -36,14 +39,16 @@ exports.updating = async(req, res, next) => {
   let result ='';
 
   try {
-    const profile_data = [];
+    const profile_data = {
+      user_img: req.files.image,
+      user_idx: req.user_idx
 
-    console.log(req.files);
-    for (let i=0, len=req.files.length; i<len; i++) {
+    };
+    console.log(req.files.image);
+    for (let i=0, len=req.files.image.length; i<len; i++) {
       profile_data[i] = [];
-      profile_data[i].push(req.files[i].location, parseInt(req.params.user_idx, 10));
+      profile_data[i].push(req.files.image[i].location, parseInt(req.params.user_idx, 10));
     }
-    console.log(profile_data);
     result = await profileModel.updating(profile_data);
   }catch (error){
     if (isNaN(error)) {
@@ -73,7 +78,7 @@ const storageS3 = multerS3({
   }
 });
 
-exports.uploadImage = multer({storage: storageS3}).array('image', 5);
+exports.uploadImage = multer({storage: storageS3}).single('image');
 
 
 // const storage = multer.diskStorage({
@@ -90,4 +95,3 @@ exports.uploadImage = multer({storage: storageS3}).array('image', 5);
 //     callback(null, fname);
 //   }
 // });
-

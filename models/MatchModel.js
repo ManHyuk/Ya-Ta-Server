@@ -192,10 +192,11 @@ exports.inquiry = (inquiry_data)=> {
   return new Promise((resolve, reject) => {
     //applying_idx와 a.matching_idx 는 확인결과를 위한 값이므로 삭제해도 가능
     const sql =
-    "SELECT DISTINCT applying_idx, a.matching_idx, user_img, user_name, matching_sloc, matching_eloc, matching_time "+
+    "SELECT DISTINCT rating_star, applying_idx, a.matching_idx, user_img, user_name, matching_sloc, matching_eloc, matching_time "+
     "FROM matching as m " +
     "LEFT JOIN applying as a ON m.matching_idx = a.matching_idx "+
     "LEFT JOIN user as u ON u.user_idx = a.user_idx "+
+    "LEFT JOIN rating as r ON r.receive_user_idx = a.user_idx "+
     "WHERE (m.user_idx = ?) AND (applying_type =3) ";
     // Q. applying_type = 3인값만 필요한지 AND 조건 달아서 matching_type =3인것도 확인해야 하는지
 

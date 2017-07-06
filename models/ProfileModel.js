@@ -27,7 +27,7 @@ exports.updating = (profile_data) => {
   return new Promise((resolve, reject) => {
     const sql =
       "UPDATE user SET user_img = ? WHERE user_idx = ? ";
-    pool.query(sql, [profile_data], (err,rows)=> {
+    pool.query(sql, [profile_data.user_img], (err,rows)=> {
       if (err) {
         reject(err)
       } else {

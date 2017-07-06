@@ -71,7 +71,11 @@ exports.register = async(req, res, next) => {
       return res.status(400).json(res_msg[8400]);
     }
   }
-  return res.status(200).json(res_msg[1200]);
+  return res.status(200).json({
+    "status":true,
+    "message": "success",
+    "result": result
+  });
 
 
 };

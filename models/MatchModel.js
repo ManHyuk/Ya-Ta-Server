@@ -91,7 +91,24 @@ exports.register = (owner_data, user_idx) => {
         }
       });
     });
-  })
+  }).then(() => {
+    return new Promise((resolve, reject) => {
+      const sql =
+        `
+        SELECT m.matching_idx
+        FROM matching AS m
+        WHERE m.user_idx = ?
+        `;
+
+      pool.query(sql, [user_idx], (err,rows) => {
+        if (err){
+          reject(err)
+        }else {
+          resolve(rows[0])
+        }
+      });
+    });
+  });
 };
 
 exports.approved = (approved_data) => {

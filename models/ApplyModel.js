@@ -22,7 +22,8 @@ exports.list = (list_data) => {
         m.matching_message,
         m.matching_time,
         r.rating_star,
-        m.matching_type
+        m.matching_type,
+        u.user_phone
       
       FROM matching AS m
         LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx

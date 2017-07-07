@@ -109,7 +109,9 @@ exports.register = (owner_data, user_idx) => {
         `
         SELECT m.matching_idx
         FROM matching AS m
+          LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
         WHERE m.user_idx = ?
+        ORDER BY m.matching_created_at DESC LIMIT 1;
         `;
 
       pool.query(sql, [user_idx], (err,rows) => {

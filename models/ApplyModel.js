@@ -23,7 +23,8 @@ exports.list = (list_data) => {
         m.matching_time,
         r.rating_star,
         m.matching_type,
-        u.user_phone
+        u.user_phone,
+        date_format(convert_tz(m.matching_created_at, "+00:00", "+00:00"), "%Y.%m.%d %H:%i 등록완료") matching_created_at
       
       FROM matching AS m
         LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
@@ -46,6 +47,7 @@ exports.list = (list_data) => {
 exports.search = (search_data) => {
   return new Promise((resolve, reject) => {
     const sql =
+      // date_format(convert_tz(m.matching_created_at, "+00:00", "+00:00"), "%Y-%m-%d") m.matching_created_at
       `
       SELECT
         m.matching_idx,
@@ -58,7 +60,8 @@ exports.search = (search_data) => {
         m.matching_saddr,
         m.matching_eaddr,
         m.matching_time,
-        m.matching_created_at
+        date_format(convert_tz(m.matching_created_at, "+00:00", "+00:00"), "%Y.%m.%d %H:%i 등록완료") matching_created_at
+        
         
       FROM matching AS m
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
@@ -69,6 +72,7 @@ exports.search = (search_data) => {
       if (err) {
         reject(err);
       } else {
+
         resolve(rows);
       }
     });

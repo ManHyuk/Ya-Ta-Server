@@ -132,7 +132,7 @@ exports.approved = (approved_data) => {
       `
       UPDATE applying AS a
       LEFT JOIN matching AS m ON a.matching_idx = m.matching_idx
-      SET a.applying_type = 1 , m.matching_type = 2, a.applyintg_flag = a.applying_type 
+      SET a.applying_type = 1 , m.matching_type = 2, a.applying_flag = a.applying_type 
       WHERE a.applying_idx = ?
       `;
 

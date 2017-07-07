@@ -22,13 +22,13 @@ exports.list = (list_data) => {
         m.matching_message,
         m.matching_time,
         r.rating_star,
-        m.matching_type2
+        m.matching_type
       
       FROM matching AS m
         LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
         LEFT JOIN rating AS r ON m.user_idx = r.receive_user_idx
-      WHERE (a.user_idx = ?) AND (m.matching_type <= 1);
+      WHERE (a.user_idx = ?) AND (m.matching_flag = 0);
       `;
 
     pool.query(sql, [list_data.u_idx, list_data.u_idx], (err,rows) => {
@@ -58,6 +58,7 @@ exports.search = (search_data) => {
         m.matching_eaddr,
         m.matching_time,
         m.matching_created_at
+        
       FROM matching AS m
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
       WHERE (m.matching_sloc REGEXP ? AND m.matching_eloc REGEXP ?) AND (m.matching_type <= 1)

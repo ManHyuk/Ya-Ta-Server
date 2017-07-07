@@ -55,6 +55,7 @@ exports.search = (search_data) => {
         m.matching_companion,
         m.matching_saddr,
         m.matching_eaddr,
+        m.matching_time,
         m.matching_created_at
       FROM matching AS m
         LEFT JOIN user AS u ON m.user_idx = u.user_idx

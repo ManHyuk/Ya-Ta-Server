@@ -90,6 +90,7 @@ exports.apply = (apply_data) => {
     });
   }).then(() => { // apply시 matching 상태 1로 변경
     return new Promise((resolve, reject) => {
+      // 운전자가 차주 매칭글에 신청하면 차주는 신청을 받았다는 플래그 매칭타입 1로 변경
       const sql =
         `
         UPDATE matching
@@ -105,18 +106,23 @@ exports.apply = (apply_data) => {
       });
     }).then(() => {
       return new Promise((resolve, reject) => {
+        // 운전자가 차주 매칭글에 신청할때 최신 값을 보여주기 위해 조건 추가
         const sql =
           `
-          SELECT a.matching_idx, a.applying_idx
+          SELECT
+            a.matching_idx,
+            a.applying_idx
           FROM applying AS a
           WHERE a.user_idx = ?
+          ORDER BY a.applying_created_at DESC limit 1;
+          
           `;
 
         pool.query(sql, [apply_data.user_idx], (err,rows) => {
           if (err){
             reject(err)
           } else {
-            resolve(rows[0])
+            resolve(rows)
           }
         });
 

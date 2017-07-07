@@ -14,13 +14,13 @@ exports.owner = (owner_data) => {
         u.user_type
       FROM matching AS m
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
-      WHERE m.user_idx=?
+      WHERE (m.user_idx=?) AND (m.matching_type <=2)
       `;
     pool.query(sql, [owner_data.user_idx], (err,rows) => {
       if(err){
         reject(err)
       }else{
-        resolve(rows[0])
+        resolve(rows)
       }
     });
   });
@@ -249,6 +249,7 @@ exports.detail = (detail_data) => {
         user_name,
         user_age,
         user_career,
+        user_phone,
         applying_companion,
         m.matching_sloc,
         m.matching_eloc

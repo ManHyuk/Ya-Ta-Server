@@ -132,7 +132,7 @@ exports.approved = (approved_data) => {
       `
       UPDATE applying AS a
       LEFT JOIN matching AS m ON a.matching_idx = m.matching_idx
-      SET a.applying_type = 1 , m.matching_type = 2
+      SET a.applying_type = 1 , m.matching_type = 2, a.applyintg_flag = a.applying_type 
       WHERE a.applying_idx = ?
       `;
 
@@ -185,7 +185,7 @@ exports.completed = (completed_data) => {
       `
       UPDATE applying as a
         LEFT JOIN matching as m ON a.matching_idx = m.matching_idx
-      SET m.matching_type = 2
+      SET m.matching_type = 2, m.matching_flag = 1
       WHERE a.applying_idx = ?
       `;
     pool.query(sql, [completed_data.a_idx], (err,rows) => {
@@ -205,7 +205,7 @@ exports.finished = (finished_data) => {
       `
       UPDATE matching as m
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
-      SET m.matching_type = 3, u.user_type = 0, m.matching_type2 = m.matching_type
+      SET m.matching_type = 3, u.user_type = 0, m.matching_flag = 2 
       WHERE m.matching_idx = ?
       `;
     pool.query(sql, [finished_data.m_idx], (err, rows) => {

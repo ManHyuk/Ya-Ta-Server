@@ -96,7 +96,7 @@ exports.apply = (apply_data) => {
       const sql =
         `
         UPDATE matching
-        SET matching_type = 1, matching_type2 = matching_type
+        SET matching_type = 1
         WHERE matching_idx = ?
         `;
       pool.query(sql, [apply_data.matching_idx], (err, rows) => {
@@ -159,7 +159,7 @@ exports.completed = (completed_data) => {
     const sql =
       `
       UPDATE applying AS a
-      SET a.applying_type = 2, a.applying_type2 = a.applying_type
+      SET a.applying_type = 2, a.applying_flag = a.applying_type
       WHERE a.applying_idx = ?
       `;
 
@@ -180,7 +180,7 @@ exports.finished = (finished_data) => {
     const sql =
       `
       UPDATE applying
-      SET applying_type = 3, applying_type2 = applying_type
+      SET applying_type = 3, applying_flag = applying_type
       WHERE applying_idx = ?
       `;
     pool.query(sql, [finished_data.a_idx], (err, rows) => {

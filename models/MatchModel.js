@@ -205,7 +205,7 @@ exports.finished = (finished_data) => {
       `
       UPDATE matching as m
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
-      SET m.matching_type = 3, u.user_type = 0
+      SET m.matching_type = 3, u.user_type = 0, m.matching_type2 = m.matching_type
       WHERE m.matching_idx = ?
       `;
     pool.query(sql, [finished_data.m_idx], (err, rows) => {

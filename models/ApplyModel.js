@@ -21,16 +21,17 @@ exports.list = (list_data) => {
         m.matching_eaddr,
         m.matching_message,
         m.matching_time,
-        r.rating_star
-
+        r.rating_star,
+        m.matching_type2
+      
       FROM matching AS m
         LEFT JOIN applying AS a ON m.matching_idx = a.matching_idx
         LEFT JOIN user AS u ON m.user_idx = u.user_idx
         LEFT JOIN rating AS r ON m.user_idx = r.receive_user_idx
-      WHERE (a.user_idx = ? ) AND (m.matching_type <= 1)
+      WHERE (a.user_idx = ?) AND (m.matching_type <= 1);
       `;
 
-    pool.query(sql, [list_data.u_idx], (err,rows) => {
+    pool.query(sql, [list_data.u_idx, list_data.u_idx], (err,rows) => {
       if (err) {
         reject(err)
       }else{
@@ -95,7 +96,7 @@ exports.apply = (apply_data) => {
       const sql =
         `
         UPDATE matching
-        SET matching_type = 1
+        SET matching_type = 1, matching_type2 = matching_type
         WHERE matching_idx = ?
         `;
       pool.query(sql, [apply_data.matching_idx], (err, rows) => {
@@ -158,7 +159,7 @@ exports.completed = (completed_data) => {
     const sql =
       `
       UPDATE applying AS a
-      SET a.applying_type = 2
+      SET a.applying_type = 2, a.applying_type2 = a.applying_type
       WHERE a.applying_idx = ?
       `;
 
@@ -179,7 +180,7 @@ exports.finished = (finished_data) => {
     const sql =
       `
       UPDATE applying
-      SET applying_type = 3
+      SET applying_type = 3, applying_type2 = applying_type
       WHERE applying_idx = ?
       `;
     pool.query(sql, [finished_data.a_idx], (err, rows) => {

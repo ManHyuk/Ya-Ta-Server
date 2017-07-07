@@ -11,7 +11,6 @@ exports.list = async(req, res, next) => {
       u_idx : req.user_idx
     };
 
-    console.log(list_data);
     result = await applyModel.list(list_data);
   }catch(error){
     if (isNaN(error)) {

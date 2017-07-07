@@ -31,7 +31,7 @@ module.exports = (router) => {
     .post(authCtrl.auth, matchCtrl.register) // 차주 / 매칭 신청
     .delete(authCtrl.auth, matchCtrl.remove);// 차주 / 매칭 삭제
   router.route('/owner/match/list/:matching_idx')// 차주 / 운전자 신청 조회
-    .get(authCtrl.auth, matchCtrl.list)
+    .get(authCtrl.auth, matchCtrl.list);
 
   router.route('/owner/match/detail/:applying_idx')
     .get(authCtrl.auth, matchCtrl.detail); // 차주 / 운전자 상세보기
@@ -47,9 +47,9 @@ module.exports = (router) => {
   router.route('/owner/match/finish/:matching_idx')
     .put(authCtrl.auth, matchCtrl.finished); // 차주 / 운전자 매칭 종료
   // DRIVER MATCHING
-  router.route('/driver/match/complete/:applying_idx')
+  router.route('/driver/apply/complete/:applying_idx')
     .put(authCtrl.auth, applyCtrl.completed);
-  router.route('/driver/match/finish/:applying_idx')
+  router.route('/driver/apply/finish/:applying_idx')
     .put(authCtrl.auth, applyCtrl.finished);
 
 
